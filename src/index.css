@@ -1,1 +1,24 @@
 @import "tailwindcss";
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Soft twinkle animation */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+}
+.animate-[twinkle_8s_linear_infinite] {
+  animation: twinkle 8s linear infinite;
+}
