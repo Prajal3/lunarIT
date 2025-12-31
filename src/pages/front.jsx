@@ -18,9 +18,9 @@ const Front = () => {
             <div className="absolute inset-0 bg-linear-to-br from-indigo-900/40 via-purple-900/30 to-indigo-800/40"></div>
 
             {/* Soft particles */}
-            <div className="absolute inset-0">
-                <div className="w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.6)_2px,transparent_0),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.5)_2px,transparent_0),radial-gradient(circle_at_40%_70%,rgba(255,255,255,0.4)_1.5px,transparent_0),radial-gradient(circle_at_70%_60%,rgba(255,255,255,0.4)_1.5px,transparent_0)] animate-[twinkle_8s_linear_infinite]"></div>
-            </div>
+                <div className="absolute inset-0">
+                    <div className="w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.6)_2px,transparent_0),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.5)_2px,transparent_0),radial-gradient(circle_at_40%_70%,rgba(255,255,255,0.4)_1.5px,transparent_0),radial-gradient(circle_at_70%_60%,rgba(255,255,255,0.4)_1.5px,transparent_0)] animate-[twinkle_8s_linear_infinite]"></div>
+                </div>
 
             {/* Floating Glass Card */}
             <motion.div
@@ -69,9 +69,9 @@ const Front = () => {
                     className="px-12 py-3 sm:px-14 sm:py-4 rounded-full font-semibold text-lg
                      bg-linear-to-r from-indigo-500 to-purple-500
                      hover:from-indigo-600 hover:to-purple-600
-                     transition-all duration-300 shadow-lg"
+                     transition-all duration-300 shadow-lg cursor-pointer"
                 >
-                    Enter
+                    Visit
                 </motion.button>
             </motion.div>
         </div>
