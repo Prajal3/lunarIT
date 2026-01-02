@@ -3,7 +3,7 @@ import Front from "./pages/front"
 import Home from "./pages/home"
 import Nav from "./components/navbar"
 import About from "./components/about"
-
+import Resources from "./components/resources"
 const App = () => {
   const HomeLayout = () => {
     return (
@@ -30,7 +30,14 @@ const App = () => {
         {
           path: "about",
           element: <About />
-        }
+        },
+
+      {
+
+        path:"resources",
+        element:<Resources/>
+      }
+
       ]
     }
   ]);

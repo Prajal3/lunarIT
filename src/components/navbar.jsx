@@ -14,23 +14,17 @@ const Nav = () => {
           </Link>
         </li>
         <li>
-          <Link to="/about" className="text-gray-700 hover:text-blue-600">
-            About
-          </Link>
-        </li>
-        <li>
           <Link to="/resources" className="text-gray-700 hover:text-blue-600">
             Resources
           </Link>
         </li>
+        
         <li>
-          <Link
-            to="/emergency"
-            className="text-red-600 font-semibold hover:underline"
-          >
-            Emergency Help
+          <Link to="/about" className="text-gray-700 hover:text-blue-600">
+            About
           </Link>
         </li>
+
       </ul>
     </nav>
   );
