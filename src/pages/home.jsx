@@ -53,10 +53,9 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-[#eef7f4] to-[#f9fbfb] px-6 py-16">
-
       {/* SLIDER */}
       <div
-        className="relative max-w-6xl mx-auto mb-28"
+        className="relative max-w-6xl mx-auto mb-28 overflow-hidden"
         onMouseEnter={() => (isPaused.current = true)}
         onMouseLeave={() => (isPaused.current = false)}
       >
@@ -75,49 +74,63 @@ const Home = () => {
           <ChevronRight className="text-[#2f6f6a]" />
         </button>
 
-        <AnimatePresence mode="wait">
+        {/* Slides */}
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={index}
-            initial={{ opacity: 0, x: 40 }}
+            initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
             className="bg-white rounded-3xl shadow-[0_12px_35px_rgba(0,0,0,0.06)] overflow-hidden"
           >
+            {/* Image */}
             <img
               src={slides[index].image}
               alt={slides[index].title}
               className="h-72 w-full object-cover"
             />
 
-            <div className="p-10 relative">
-              <h2 className="text-3xl font-semibold text-[#2f6f6a] mb-4">
+            {/* Content container with fixed height for smooth slide */}
+            <div className="p-10 flex flex-col justify-center items-center min-h-90">
+              <h2 className="text-3xl font-semibold text-[#2f6f6a] mb-4 text-center">
                 {slides[index].title}
               </h2>
 
-              <p className="text-gray-600 leading-relaxed mb-8 max-w-xl">
+              <p className="text-gray-600 leading-relaxed mb-8 max-w-xl text-center">
                 {slides[index].desc}
               </p>
 
-              {/* Breathing animation ONLY on breathing slide */}
+              {/* Breathing animation */}
               {slides[index].type === "breathing" && (
-                <div className="mb-10 flex justify-start">
+                <div className="mb-10 relative flex justify-center items-center">
+                  {/* Pulsing glow */}
                   <motion.div
-                    animate={{ scale: [1, 1.4, 1] }}
+                    animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
                     transition={{
                       duration: 6,
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                    className="w-24 h-24 rounded-full bg-blue-200/60 flex items-center justify-center"
+                    className="absolute w-32 h-32 rounded-full bg-blue-300/30"
+                  />
+
+                  {/* Breathing circle */}
+                  <motion.div
+                    animate={{ scale: [1, 1.4, 1], y: [0, -10, 0] }}
+                    transition={{
+                      duration: 6,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="w-24 h-24 rounded-full bg-blue-200/60 flex items-center justify-center relative z-10"
                   >
-                    <span className="text-sm text-blue-700">
-                      breathe
-                    </span>
+                    <span className="text-sm text-blue-700">breathe</span>
                   </motion.div>
                 </div>
               )}
 
+              {/* Button */}
               <button
                 onClick={() => navigate(slides[index].route)}
                 className={`${slides[index].color} text-white px-10 py-3 rounded-full transition`}

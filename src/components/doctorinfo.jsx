@@ -2,29 +2,29 @@ import { motion } from "framer-motion";
 
 const doctors = [
   {
-    name: "Dr. Ananya Sharma",
-    role: "Clinical Psychologist",
-    hospital: "MindCare Wellness Center",
-    phone: "+977 9812345678",
+    name: "Dr. Ramesh Thapa",
+    role: "Psychiatrist",
+    hospital: "Kathmandu Mental Health Center",
+    phone: "+977 9812341122",
     image:
-      "https://images.unsplash.com/photo-1550831107-1553da8c8464",
+      "https://images.unsplash.com/photo-1607746882042-944635dfe10e", // You can replace with a Nepali doctor image
     desc:
-      "Specializes in stress management, anxiety relief, and emotional balance through mindfulness-based therapy.",
+      "Specializes in depression, anxiety, and stress-related disorders with culturally sensitive therapy.",
   },
   {
-    name: "Dr. Rahul Verma",
-    role: "Psychiatrist",
-    hospital: "Peace Mental Health Hospital",
-    phone: "+977 9801122334",
+    name: "Dr. Sunita Gurung",
+    role: "Clinical Psychologist",
+    hospital: "Pokhara MindCare Clinic",
+    phone: "+977 9801234567",
     image:
-      "https://images.unsplash.com/photo-1537368910025-700350fe46c7",
+      "https://images.unsplash.com/photo-1594824476967-48c8b964273f", // Replace if you want Nepali-looking image
     desc:
-      "Focused on anxiety disorders, depression, and holistic mental well-being with a calm, patient-first approach.",
+      "Focused on emotional balance, anxiety relief, and mindfulness therapy for individuals and families.",
   },
   {
     name: "Dr. Suman Karki",
     role: "Mental Health Counselor",
-    hospital: "Harmony Neuro Clinic",
+    hospital: "Bhaktapur Harmony Clinic",
     phone: "+977 9845678901",
     image:
       "https://images.unsplash.com/photo-1582750433449-648ed127bb54",
@@ -32,12 +32,12 @@ const doctors = [
       "Helps individuals cope with stress, burnout, and emotional overload through supportive counseling.",
   },
   {
-    name: "Dr. Neha Patel",
+    name: "Dr. Neha Shrestha",
     role: "Behavioral Therapist",
-    hospital: "Serenity Psychological Care",
+    hospital: "Lalitpur Serenity Psychological Care",
     phone: "+977 9865432109",
     image:
-      "https://images.unsplash.com/photo-1594824476967-48c8b964273f",
+      "https://images.unsplash.com/photo-1550831107-1553da8c8464",
     desc:
       "Works with behavioral therapy techniques to improve emotional resilience and mental clarity.",
   },

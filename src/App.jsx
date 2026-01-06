@@ -4,6 +4,7 @@ import Home from "./pages/home"
 import Nav from "./components/navbar"
 import About from "./components/about"
 import Resources from "./components/resources"
+import Breath from "./components/breathing"
 const App = () => {
   const HomeLayout = () => {
     return (
@@ -36,7 +37,12 @@ const App = () => {
 
         path:"resources",
         element:<Resources/>
+      },
+      {
+        path:"breathing",
+        element:<Breath/>
       }
+
 
       ]
     }
