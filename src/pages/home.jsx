@@ -1,16 +1,17 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import DoctorsSection from "../components/doctorinfo.jsx";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import BreathingExercise from "../components/breathing.jsx";
 
 const slides = [
   {
     type: "questions",
-    title: "Reflect & Understand",
-    desc: "A gentle space to reflect on thoughts and emotions without pressure.",
+    title: "Your MentalHealth Matters",
+    desc: "A simple check-in for your mental well-being.",
     image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-    button: "Begin Reflection",
+    button: "Start check-in",
     route: "/questions",
     color: "bg-[#5fb3a2] hover:bg-[#4aa292]",
   },
@@ -18,7 +19,6 @@ const slides = [
     type: "breathing",
     title: "Calm Your Breath",
     desc: "Slow breathing to relax the nervous system and release stress.",
-    image: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88",
     button: "Start Breathing",
     route: "/breathing",
     color: "bg-[#7ab8ff] hover:bg-[#66a9f5]",
@@ -30,6 +30,9 @@ const Home = () => {
   const [index, setIndex] = useState(0);
   const intervalRef = useRef(null);
   const isPaused = useRef(false);
+
+  // Breathing popup state
+  const [breathingOpen, setBreathingOpen] = useState(false);
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
@@ -49,6 +52,14 @@ const Home = () => {
   const prev = () => {
     isPaused.current = true;
     setIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const handleButtonClick = (slide) => {
+    if (slide.type === "breathing") {
+      setBreathingOpen(true);
+    } else {
+      navigate(slide.route);
+    }
   };
 
   return (
@@ -91,20 +102,18 @@ const Home = () => {
               className="h-72 w-full object-cover"
             />
 
-            {/* Content container with fixed height for smooth slide */}
+            {/* Content */}
             <div className="p-10 flex flex-col justify-center items-center min-h-90">
               <h2 className="text-3xl font-semibold text-[#2f6f6a] mb-4 text-center">
                 {slides[index].title}
               </h2>
-
               <p className="text-gray-600 leading-relaxed mb-8 max-w-xl text-center">
                 {slides[index].desc}
               </p>
 
-              {/* Breathing animation */}
+              {/* Breathing animation on slider */}
               {slides[index].type === "breathing" && (
                 <div className="mb-10 relative flex justify-center items-center">
-                  {/* Pulsing glow */}
                   <motion.div
                     animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
                     transition={{
@@ -114,8 +123,6 @@ const Home = () => {
                     }}
                     className="absolute w-32 h-32 rounded-full bg-blue-300/30"
                   />
-
-                  {/* Breathing circle */}
                   <motion.div
                     animate={{ scale: [1, 1.4, 1], y: [0, -10, 0] }}
                     transition={{
@@ -132,7 +139,7 @@ const Home = () => {
 
               {/* Button */}
               <button
-                onClick={() => navigate(slides[index].route)}
+                onClick={() => handleButtonClick(slides[index])}
                 className={`${slides[index].color} text-white px-10 py-3 rounded-full transition`}
               >
                 {slides[index].button}
@@ -156,6 +163,12 @@ const Home = () => {
 
       {/* DOCTORS */}
       <DoctorsSection />
+
+      {/* Breathing Exercise Popup */}
+      <BreathingExercise
+        isOpen={breathingOpen}
+        onClose={() => setBreathingOpen(false)}
+      />
     </div>
   );
 };
