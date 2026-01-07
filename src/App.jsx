@@ -5,6 +5,7 @@ import Nav from "./components/navbar"
 import About from "./components/about"
 import Resources from "./components/resources"
 import Breath from "./components/breathing"
+import Questions from "./components/Questions"
 const App = () => {
   const HomeLayout = () => {
     return (
@@ -41,6 +42,10 @@ const App = () => {
       {
         path:"breathing",
         element:<Breath/>
+      },
+      {
+        path:"questions",
+        element:<Questions/>
       }
 
 

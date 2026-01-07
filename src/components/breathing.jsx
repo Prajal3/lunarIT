@@ -6,11 +6,11 @@ const Breath = ({ isOpen, onClose }) => {
   const [phase, setPhase] = useState('inhale');
   const [counter, setCounter] = useState(4);
 
-  // Calming mental health colors
+  // Mental health calming colors
   const phases = {
     inhale: { duration: 4000, text: 'Breathe In', color: 'from-[#6EE7B7] to-[#3B82F6]' }, 
     hold1: { duration: 4000, text: 'Hold', color: 'from-[#A78BFA] to-[#F9A8D4]' },      
-    exhale: { duration: 4000, text: 'Breathe Out', color: 'from-[#FBCFE8] to-[#F87171]' }, 
+    exhale: { duration: 4000, text: 'Breathe Out', color: 'from-[#5fb3a2] to-[#7fd1c3]' }, 
     hold2: { duration: 4000, text: 'Relax', color: 'from-[#34D399] to-[#10B981]' }      
   };
 
@@ -55,7 +55,7 @@ const Breath = ({ isOpen, onClose }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Background overlay showing Home blurred */}
+          {/* Background overlay */}
           <motion.div
             className="absolute inset-0 bg-black/40 backdrop-blur-md"
             initial={{ opacity: 0 }}
@@ -83,7 +83,7 @@ const Breath = ({ isOpen, onClose }) => {
             {/* Header */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center gap-2 mb-3">
-                <Wind className="w-8 h-8 text-cyan-400" />
+                <Wind className="w-8 h-8 text-[#5fb3a2]" />
                 <h2 className="text-3xl md:text-4xl font-bold text-white">Breathing Exercise</h2>
               </div>
               <p className="text-slate-400 text-sm md:text-base">
@@ -93,14 +93,14 @@ const Breath = ({ isOpen, onClose }) => {
 
             {/* Breathing Circle */}
             <div className="flex items-center justify-center mb-8 relative h-64 md:h-80">
-              {/* Outer glow */}
+              {/* Outer Glow */}
               <motion.div
-                animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
+                animate={{ scale: [1, 1.8, 1], opacity: [0.4, 0, 0.4] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                 className={`absolute rounded-full w-48 h-48 md:w-64 md:h-64 blur-xl opacity-20 bg-linear-to-r ${phases[phase].color}`}
-              ></motion.div>
+              />
 
-              {/* Main circle */}
+              {/* Main Circle */}
               <motion.div
                 animate={{ scale: getCircleScale() }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}

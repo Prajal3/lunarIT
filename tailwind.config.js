@@ -16,7 +16,8 @@ export default {
       animation: {
         fadeIn: "fadeIn 1.2s ease-out forwards",
         slideUp: "slideUp 1s ease-out forwards",
-      },
+      
+      }
     },
   },
   plugins: [],

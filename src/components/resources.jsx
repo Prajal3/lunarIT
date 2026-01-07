@@ -73,8 +73,8 @@ const Resources = () => {
             }}
             className={`px-4 py-2 rounded-lg transition-all duration-300 ${
               selectedCategory === cat
-                ? "bg-purple-600 text-white scale-105"
-                : "bg-white text-gray-700 hover:bg-gray-100"
+                ? "bg-teal-600 text-white scale-105"
+                : "bg-white text-gray-700 hover:bg-teal-100 hover:text-teal-700"
             }`}
           >
             {cat}
@@ -96,13 +96,13 @@ const Resources = () => {
               className="bg-white rounded-xl p-6 shadow-lg
                          transition-all duration-300
                          hover:shadow-xl hover:scale-[1.02]
-                         hover:ring-2 hover:ring-purple-200"
+                         hover:ring-2 hover:ring-teal-200"
             >
               <div className="flex items-start justify-between mb-3">
                 <h3 className="text-xl font-bold text-gray-800">
                   {resource.title}
                 </h3>
-                <span className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
+                <span className="px-3 py-1 bg-teal-100 text-teal-700 text-sm rounded-full">
                   {resource.category}
                 </span>
               </div>
@@ -125,7 +125,7 @@ const Resources = () => {
                     expandedId === resource.id ? null : resource.id
                   )
                 }
-                className="mt-2 text-sm text-purple-600 hover:underline"
+                className="mt-2 text-sm text-teal-600 hover:underline"
               >
                 {expandedId === resource.id
                   ? "Read Less"
