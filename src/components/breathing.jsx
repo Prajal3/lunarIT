@@ -3,45 +3,51 @@ import { X, Wind, CircleDot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Breath = ({ isOpen, onClose }) => {
-  const [phase, setPhase] = useState('inhale');
-  const [counter, setCounter] = useState(4);
-
-  // Mental health calming colors
   const phases = {
-    inhale: { duration: 4000, text: 'Breathe In', color: 'from-[#6EE7B7] to-[#3B82F6]' }, 
-    hold1: { duration: 4000, text: 'Hold', color: 'from-[#A78BFA] to-[#F9A8D4]' },      
-    exhale: { duration: 4000, text: 'Breathe Out', color: 'from-[#5fb3a2] to-[#7fd1c3]' }, 
-    hold2: { duration: 4000, text: 'Relax', color: 'from-[#34D399] to-[#10B981]' }      
+    inhale: { duration: 4000, text: 'Breathe In', color: 'from-[#6EE7B7] to-[#3B82F6]' },
+    hold1: { duration: 4000, text: 'Hold', color: 'from-[#A78BFA] to-[#F9A8D4]' },
+    exhale: { duration: 4000, text: 'Breathe Out', color: 'from-[#5fb3a2] to-[#7fd1c3]' },
+    hold2: { duration: 4000, text: 'Relax', color: 'from-[#34D399] to-[#10B981]' },
   };
+
+  const phaseOrder = ['inhale', 'hold1', 'exhale', 'hold2'];
+
+  const [phase, setPhase] = useState('inhale');
+  const [counter, setCounter] = useState(phases['inhale'].duration / 1000);
+
+  // Reset when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setPhase('inhale');
+      setCounter(phases['inhale'].duration / 1000);
+    }
+  }, [isOpen]);
 
   // Cycle phases
   useEffect(() => {
     if (!isOpen) return;
 
-    const phaseOrder = ['inhale', 'hold1', 'exhale', 'hold2'];
-    const currentPhaseIndex = phaseOrder.indexOf(phase);
-
-    const cyclePhase = () => {
-      const nextPhaseIndex = (currentPhaseIndex + 1) % phaseOrder.length;
-      const nextPhase = phaseOrder[nextPhaseIndex];
+    const interval = setInterval(() => {
+      const currentIndex = phaseOrder.indexOf(phase);
+      const nextIndex = (currentIndex + 1) % phaseOrder.length;
+      const nextPhase = phaseOrder[nextIndex];
       setPhase(nextPhase);
       setCounter(phases[nextPhase].duration / 1000);
-    };
+    }, phases[phase].duration);
 
-    const phaseInterval = setInterval(cyclePhase, phases[phase].duration);
-    return () => clearInterval(phaseInterval);
+    return () => clearInterval(interval);
   }, [isOpen, phase]);
 
-  // Countdown
+  // Countdown timer
   useEffect(() => {
     if (!isOpen || counter <= 0) return;
 
     const countInterval = setInterval(() => {
-      setCounter(prev => Math.max(0, prev - 1));
+      setCounter(prev => Math.max(prev - 1, 0));
     }, 1000);
 
     return () => clearInterval(countInterval);
-  }, [isOpen, counter, phase]);
+  }, [isOpen, counter]);
 
   const getCircleScale = () => (phase === 'inhale' || phase === 'hold1' ? 1.5 : 0.75);
   const getCircleOpacity = () => (phase === 'hold1' || phase === 'hold2' ? 0.8 : 1);
@@ -93,14 +99,11 @@ const Breath = ({ isOpen, onClose }) => {
 
             {/* Breathing Circle */}
             <div className="flex items-center justify-center mb-8 relative h-64 md:h-80">
-              {/* Outer Glow */}
               <motion.div
                 animate={{ scale: [1, 1.8, 1], opacity: [0.4, 0, 0.4] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                 className={`absolute rounded-full w-48 h-48 md:w-64 md:h-64 blur-xl opacity-20 bg-linear-to-r ${phases[phase].color}`}
               />
-
-              {/* Main Circle */}
               <motion.div
                 animate={{ scale: getCircleScale() }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
@@ -109,8 +112,6 @@ const Breath = ({ isOpen, onClose }) => {
               >
                 <CircleDot className="w-12 h-12 md:w-16 md:h-16 text-white animate-pulse" />
               </motion.div>
-
-              {/* Counter */}
               <div className="absolute text-6xl md:text-7xl font-bold text-white opacity-30">
                 {counter}
               </div>
@@ -130,13 +131,13 @@ const Breath = ({ isOpen, onClose }) => {
 
               {/* Progress Indicator */}
               <div className="flex justify-center gap-2 mt-6">
-                {['inhale', 'hold1', 'exhale', 'hold2'].map((p) => (
+                {phaseOrder.map((p) => (
                   <div
                     key={p}
                     className={`h-2 w-12 rounded-full transition-all duration-300 ${
                       phase === p ? `bg-linear-to-r ${phases[p].color}` : 'bg-slate-700'
                     }`}
-                  ></div>
+                  />
                 ))}
               </div>
             </div>
