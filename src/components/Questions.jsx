@@ -23,7 +23,6 @@ const Questions = () => {
   const generateQuestions = async () => {
     setIsGenerating(true);
     try {
-      // 🔒 API call removed for safety in demo
       setQuestions(fallbackQuestions);
       setShowQuiz(true);
     } catch (err) {
@@ -49,14 +48,157 @@ const Questions = () => {
     }
   };
 
-  /* ------------------ Analyze Answers ------------------ */
-  const analyzeAnswers = async () => {
+  /* ------------------ Analyze Answers with AI ------------------ */
+  const analyzeAnswers = async (userAnswers) => {
     setIsAnalyzing(true);
-    setTimeout(() => {
+    
+    try {
+      // Prepare the answers for AI analysis
+      const answersText = userAnswers
+        .map((item, i) => `Q${i + 1}: ${item.question}\nAnswer: ${item.answer}`)
+        .join("\n\n");
+
+      // Call Claude API for personalized analysis
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [
+            {
+              role: "user",
+              content: `You are a compassionate mental health assessment analyzer. Based on the following responses to a mental health check-in, provide a personalized analysis.
+
+${answersText}
+
+Please respond ONLY with a valid JSON object (no markdown, no backticks) in this exact format:
+{
+  "overallScore": <number 0-100>,
+  "summary": "<2-3 sentences about their overall wellbeing>",
+  "strengths": ["<strength 1>", "<strength 2>"],
+  "areasForGrowth": ["<area 1>", "<area 2>"],
+  "recommendations": ["<recommendation 1>", "<recommendation 2>", "<recommendation 3>"]
+}
+
+Guidelines:
+- Be warm, supportive, and non-judgmental
+- Score should reflect overall wellbeing (higher = better)
+- Identify 2-3 genuine strengths from their responses
+- Note 2-3 areas that could use support
+- Provide 3-4 actionable, specific recommendations
+- Keep all text concise and encouraging
+- This is NOT a clinical diagnosis, just supportive reflection`
+            }
+          ],
+        }),
+      });
+
+      const data = await response.json();
+      
+      // Extract text from response
+      const text = data.content
+        .filter(item => item.type === "text")
+        .map(item => item.text)
+        .join("");
+
+      // Parse the JSON response
+      const cleanText = text.replace(/```json\n?|```\n?/g, "").trim();
+      const aiReport = JSON.parse(cleanText);
+
+      setReport(aiReport);
+      setShowReport(true);
+    } catch (error) {
+      console.error("AI analysis error:", error);
+      // Fallback to rule-based system if AI fails
+      const fallbackReport = generateFallbackReport(userAnswers);
       setReport(fallbackReport);
       setShowReport(true);
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+    }
+  };
+
+  /* ------------------ Fallback Report Generator ------------------ */
+  const generateFallbackReport = (userAnswers) => {
+    const scoreMap = {
+      "Calm and positive": 3, "Mostly okay": 2, "Somewhat overwhelmed": 1, "Very stressed": 0,
+      "Very well": 3, "Okay": 2, "Poorly": 1, "Very poorly": 0,
+      "Rarely": 3, "Sometimes": 2, "Often": 1, "Almost always": 0,
+      "Very connected": 3, "Somewhat connected": 2, "A little isolated": 1, "Very isolated": 0,
+      "Very confident": 3, "Mostly confident": 2, "Sometimes struggle": 1, "Often overwhelmed": 0,
+    };
+
+    let totalScore = 0;
+    userAnswers.forEach((item) => {
+      totalScore += scoreMap[item.answer] || 0;
+    });
+
+    const percentageScore = Math.round((totalScore / (userAnswers.length * 3)) * 100);
+
+    const strengths = [];
+    const areasForGrowth = [];
+    const recommendations = [];
+
+    const ans = userAnswers.map(a => a.answer);
+
+    if (ans[0] === "Calm and positive" || ans[0] === "Mostly okay") {
+      strengths.push("Strong emotional awareness and stability");
+    } else {
+      areasForGrowth.push("Emotional regulation during stressful times");
+      recommendations.push("Try journaling for 5 minutes each evening to process emotions");
+    }
+
+    if (ans[1] === "Very well" || ans[1] === "Okay") {
+      strengths.push("Healthy sleep patterns and rest quality");
+    } else {
+      areasForGrowth.push("Sleep quality and nighttime routines");
+      recommendations.push("Create a calming bedtime routine without screens 1 hour before sleep");
+    }
+
+    if (ans[2] === "Rarely" || ans[2] === "Sometimes") {
+      strengths.push("Effective stress management strategies");
+    } else {
+      areasForGrowth.push("Managing daily stress and anxiety");
+      recommendations.push("Practice the 4-7-8 breathing technique when feeling overwhelmed");
+    }
+
+    if (ans[3] === "Very connected" || ans[3] === "Somewhat connected") {
+      strengths.push("Strong social connections and support network");
+    } else {
+      recommendations.push("Reach out to one friend or family member this week for a meaningful chat");
+    }
+
+    if (ans[4] === "Very confident" || ans[4] === "Mostly confident") {
+      strengths.push("Resilience and confidence in facing challenges");
+    } else {
+      recommendations.push("Break big tasks into smaller steps to build confidence gradually");
+    }
+
+    if (!recommendations.length) {
+      recommendations.push("Continue your positive habits with regular check-ins");
+    }
+
+    let summary = "";
+    if (percentageScore >= 80) {
+      summary = "You're doing wonderfully! Your responses show strong mental wellbeing and healthy coping strategies. Keep nurturing these positive habits.";
+    } else if (percentageScore >= 60) {
+      summary = "You show healthy self-awareness with some areas that could benefit from gentle attention. You're on a positive path with room to grow.";
+    } else if (percentageScore >= 40) {
+      summary = "You're managing, but there are areas where extra self-care could make a meaningful difference. Remember, asking for support is a sign of strength.";
+    } else {
+      summary = "Thank you for your honesty. Things seem challenging right now. Please know that support is available, and reaching out is courageous and important.";
+    }
+
+    return {
+      overallScore: percentageScore,
+      summary,
+      strengths: strengths.length > 0 ? strengths : ["Your willingness to reflect and seek growth"],
+      areasForGrowth: areasForGrowth.length > 0 ? areasForGrowth : ["Continue building on your foundation"],
+      recommendations,
+    };
   };
 
   const resetQuiz = () => {
@@ -100,7 +242,6 @@ const Questions = () => {
               items={report.strengths}
               bg="bg-green-50"
               border="border-green-200"
-              iconColor="text-green-600"
             />
 
             {/* Growth */}
@@ -110,7 +251,6 @@ const Questions = () => {
               items={report.areasForGrowth}
               bg="bg-[#eef7f4]"
               border="border-[#bfe8df]"
-              iconColor="text-[#2f6f6a]"
             />
 
             {/* Recommendations */}
@@ -120,7 +260,6 @@ const Questions = () => {
               items={report.recommendations}
               bg="bg-[#f3fbf9]"
               border="border-[#bfe8df]"
-              iconColor="text-[#5fb3a2]"
             />
 
             <button
@@ -142,8 +281,9 @@ const Questions = () => {
         <div className="text-center">
           <Brain className="w-16 h-16 text-[#5fb3a2] mx-auto mb-4 animate-pulse" />
           <h3 className="text-xl font-semibold text-gray-700">
-            Analyzing your responses…
+            Analyzing your responses with AI…
           </h3>
+          <p className="text-gray-500 mt-2">Creating your personalized report</p>
         </div>
       </div>
     );
@@ -218,7 +358,7 @@ const Questions = () => {
         <button
           onClick={generateQuestions}
           disabled={isGenerating}
-          className="px-8 py-4 bg-[#5fb3a2] hover:bg-[#4aa292] text-white rounded-xl font-semibold flex items-center gap-3 mx-auto transition"
+          className="px-8 py-4 bg-[#5fb3a2] hover:bg-[#4aa292] text-white rounded-xl font-semibold flex items-center gap-3 mx-auto transition disabled:opacity-50"
         >
           <Sparkles className="w-5 h-5" />
           Start Check-In
@@ -248,7 +388,7 @@ const Section = ({ icon, title, items, bg, border }) => (
   </div>
 );
 
-/* ------------------ Fallback Data ------------------ */
+/* ------------------ Fallback Questions ------------------ */
 const fallbackQuestions = [
   {
     question: "How have you been feeling emotionally this past week?",
@@ -271,18 +411,5 @@ const fallbackQuestions = [
     options: ["Very confident", "Mostly confident", "Sometimes struggle", "Often overwhelmed"],
   },
 ];
-
-const fallbackReport = {
-  overallScore: 72,
-  summary:
-    "You show a healthy level of self-awareness with some areas that could benefit from gentle care and balance.",
-  strengths: ["Self-reflection", "Emotional awareness"],
-  areasForGrowth: ["Stress regulation", "Rest and recovery"],
-  recommendations: [
-    "Practice slow breathing or mindfulness daily",
-    "Maintain consistent sleep routines",
-    "Reach out to someone you trust for support",
-  ],
-};
 
 export default Questions;
