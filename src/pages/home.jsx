@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import DoctorsSection from "../components/doctorinfo.jsx";
-import { ChevronLeft, ChevronRight, Brain, Wind, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, Brain, Wind } from "lucide-react";
 import BreathingExercise from "../components/breathing.jsx";
 import Motivation from "../components/Motivation.jsx";
 
@@ -102,9 +102,9 @@ const Home = () => {
           transition={{ duration: 4, repeat: Infinity }}
           className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-md px-6 py-3 rounded-full shadow-lg mb-6 border border-white/40"
         >
-          <Sparkles className="text-[#5fb3a2]" size={20} />
+        
           <span className="text-[#2f6f6a] font-semibold">Welcome to Your MenatlSpace</span>
-          <Sparkles className="text-[#5fb3a2]" size={20} />
+          
         </motion.div>
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#2f6f6a] mb-5 tracking-tight">
           Take Care of <span className="text-transparent bg-clip-text bg-linear-to-r from-[#5fb3a2] to-[#7fd1c3]">You</span>
